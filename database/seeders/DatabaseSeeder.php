@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
+        /*
         for ($i = 0; $i < 13; $i++) {
             $product = new Product();
             $product->name =  Str::random(10);
@@ -32,5 +34,7 @@ class DatabaseSeeder extends Seeder
             $product->rating = rand(1,5);
             $product->save();
         }
+        */
+        //seed for category
     }
 }
