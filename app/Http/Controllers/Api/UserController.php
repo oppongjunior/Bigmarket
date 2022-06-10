@@ -5,10 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Supplier;
+use App\Models\UserSupplier;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Image;
+
 class UserController extends Controller
 {
     //
@@ -203,6 +207,57 @@ class UserController extends Controller
             "error" => false,
             "message" => "Image updated successfully",
             "user" => $user,
+        ];
+    }
+    public function followSupplier($user_id, $supplier_id)
+    {
+        $user_supplier = new UserSupplier();
+        $user_supplier->user_id = $user_id;
+        $user_supplier->supplier_id = $supplier_id;
+        $user_supplier->save();
+
+        $result = [];
+        $mySuppliers_id =  UserSupplier::where("user_id", "=", $user_id)->get("supplier_id");
+        foreach ($mySuppliers_id as $item) {
+            $supplier = Supplier::find($item->supplier_id);
+            array_push($result, $supplier);
+        }
+
+        return [
+            "error" => false,
+            "message" => "successfully",
+            "mySuppliers" => $result,
+        ];
+    }
+    public function unfollowSupplier($user_id, $supplier_id)
+    {
+        DB::delete('delete from user_suppliers where user_id = ? and supplier_id = ?', ["$user_id", "$supplier_id"]);
+        $result = [];
+        $mySuppliers_id =  UserSupplier::where("user_id", "=", $user_id)->get("supplier_id");
+        foreach ($mySuppliers_id as $item) {
+            $supplier = Supplier::find($item->supplier_id);
+            array_push($result, $supplier);
+        }
+        return [
+            "error" => false,
+            "message" => "successfully",
+            "mySuppliers" => $result,
+        ];
+    }
+    public function mySuppliers($user_id)
+    {
+        $result = [];
+        $mySuppliers_id =  UserSupplier::where("user_id", "=", $user_id)->get("supplier_id");
+
+        foreach ($mySuppliers_id as $item) {
+            $supplier = Supplier::find($item->supplier_id);
+            array_push($result, $supplier);
+        }
+
+        return [
+            "error" => false,
+            "message" => "successfully",
+            "mySuppliers" => $result,
         ];
     }
 

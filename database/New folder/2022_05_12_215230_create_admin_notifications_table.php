@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('special_categories', function (Blueprint $table) {
+        Schema::create('admin_notifications', function (Blueprint $table) {
             $table->id();
-            $table->string("category_name");
+            $table->string("type");
+            $table->string("subject");
+            $table->string("message");
+            $table->string("viewed");
             $table->softDeletes();
             $table->timestamps();
         });
@@ -28,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('special_categories');
+        Schema::dropIfExists('admin_notifications');
     }
 };

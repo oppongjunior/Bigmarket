@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('special_categories', function (Blueprint $table) {
+        Schema::create('user_suppliers', function (Blueprint $table) {
             $table->id();
-            $table->string("category_name");
-            $table->softDeletes();
+            $table->integer("user_id")->constrained();
+            $table->integer("supplier_id")->constrained();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('special_categories');
+        Schema::dropIfExists('user_suppliers');
     }
 };

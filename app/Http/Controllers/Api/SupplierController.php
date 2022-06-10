@@ -5,18 +5,41 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\Supplier;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Image;
 
 class SupplierController extends Controller
 {
     //
-    public function getSuppliers()
+    public function getSuppliers($id)
     {
-        $users = Supplier::all();
+        $users = Supplier::limit($id)->get();
         return $users;
+    }
+    //get products that belongs to supplier
+    public function getProducts($id)
+    {
+
+        $myProduct =
+        DB::table('products')
+        ->join("categories", "categories.id", "=", "products.category_id")
+        ->join("suppliers", "suppliers.id", "=", "products.supplier_id")
+        ->join("special_categories", "special_categories.id", "=", "products.special_category_id")
+        ->where("products.supplier_id",$id)
+        ->get([
+            "products.*", "suppliers.name as supplier_name",
+            "categories.category_name",
+            "special_categories.category_name as special_category_name"
+        ]);
+        return [
+            "error"=>false,
+            "myProducts"=>$myProduct
+        ];
     }
     //login supplier
     public function login(Request $request)
@@ -97,6 +120,117 @@ class SupplierController extends Controller
         ];
     }
 
+    //update name
+    public function updateName(Request $request)
+    {
+        //validate user
+        $id = $request->input('id');
+        $validate = Validator::make($request->all(), [
+            "name" => "required|min:3|max:255",
+        ]);
+        if ($validate->fails()) {
+            return ["error" => true, "errorType" => "validation", "error" => $validate->errors()];
+        }
+        //insert into user table
+        $supplier = Supplier::find($id);
+        $supplier->name = $request->name;
+        $supplier->update();
+
+        $supplier = Supplier::where("id", "=", $request->id)->get();
+        return [
+            "error" => false,
+            "message" => "name updated successfully",
+            "supplier" => $supplier,
+        ];
+    }
+
+    //update email
+    public function updateEmail(Request $request)
+    {
+        //validate user
+        $id = $request->input('id');
+        $validate = Validator::make($request->all(), [
+            "email" => "required|email|max:255|unique:suppliers,email,$id",
+        ]);
+        if ($validate->fails()) {
+            return ["error" => true, "errorType" => "validation", "error" => $validate->errors()];
+        }
+        //insert into user table
+        $supplier = Supplier::find($id);
+        $supplier->email = $request->email;
+        $supplier->update();
+
+        $supplier = Supplier::where("id", "=", $request->id)->get();
+        return [
+            "error" => false,
+            "message" => "email updated successfully",
+            "supplier" => $supplier,
+        ];
+    }
+    //update tel
+    public function updateTel(Request $request)
+    {
+        //validate user
+        $id = $request->input('id');
+        $validate = Validator::make($request->all(), [
+            "tel" => "required|max:50",
+        ]);
+        if ($validate->fails()) {
+            return ["error" => true, "errorType" => "validation", "error" => $validate->errors()];
+        }
+        //insert into user table
+        $supplier = Supplier::find($id);
+        $supplier->tel = $request->tel;
+        $supplier->update();
+
+        $supplier = Supplier::where("id", "=", $request->id)->get();
+        return [
+            "error" => false,
+            "message" => "Tel updated successfully",
+            "supplier" => $supplier,
+        ];
+    }
+    //update image
+    public function supplierImage(Request $request)
+    {
+        //validate user
+        $id = $request->input('id');
+        $validate = Validator::make($request->all(), [
+            "banner_image" => 'required|mimes:png,jpg,jpeg|max:5000'
+        ]);
+        if ($validate->fails()) {
+            return ["error" => true, "errorType" => "validation", "error" => $validate->errors()];
+        }
+
+        $image_file = $request->file("banner_image");
+        $image_name = hexdec(uniqid());
+        $image_ext = strtolower($image_file->getClientOriginalExtension());
+
+        $image_name = $image_name . '.' . $image_ext;
+        $location = "images/supplier_banners/";
+        $saved_image = $location . $image_name;
+
+        //upload image with image intervention
+        Image::make($image_file)->resize(1200, 720)->save($saved_image);
+
+        //insert into user table
+        $supplier = Supplier::find($id);
+        //delete previous image from folder
+        if($supplier->banner_image != ""){
+            unlink($supplier->banner_image);
+        }
+        $supplier->banner_image = $saved_image;
+        $supplier->update();
+
+
+
+        $supplier = Supplier::where("id", "=", $request->id)->get();
+        return [
+            "error" => false,
+            "message" => "Image updated successfully",
+            "supplier" => $supplier,
+        ];
+    }
     /*
     public function userPassword(Request $request)
     {

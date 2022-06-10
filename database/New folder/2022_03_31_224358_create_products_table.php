@@ -26,6 +26,8 @@ return new class extends Migration
             $table->foreignId("supplier_id")->constrained();
             $table->string("product_image");
             $table->string("verified");
+            $table->integer("rating");
+            $table->integer("review");
             $table->timestamps();
             $table->softDeletes();
         });

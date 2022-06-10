@@ -13,10 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('special_categories', function (Blueprint $table) {
+        Schema::create('sliders', function (Blueprint $table) {
             $table->id();
-            $table->string("category_name");
-            $table->softDeletes();
+            $table->string("title")->nullable();
+            $table->text("description")->nullable();
+            $table->string("image");
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('special_categories');
+        Schema::dropIfExists('sliders');
     }
 };

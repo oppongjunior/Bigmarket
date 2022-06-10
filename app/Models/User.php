@@ -45,4 +45,7 @@ class User extends Authenticatable
     public function UserNotification(){
         return $this->hasMany(UserNotification::class);
     }
+    public function UserSuppliers(){
+        return $this->hasMany(UserSupplier::class);
+    }
 }

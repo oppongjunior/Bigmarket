@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -32,12 +34,31 @@ Route::post('/update/userImage', [UserController::class, 'userImage'])->name('us
 Route::post("/user/login", [UserController::class, "login"])->name("user.login");
 Route::get("/user/orders", [UserController::class, "orders"])->name("user.orders")->middleware("auth");
 Route::get("/user/shipping", [UserController::class, "shipping"])->name("user.shipping")->middleware("auth");
+Route::get("/user/follow/{user_id}/{supplier_id}",[UserController::class,"followSupplier"]);
+Route::get("/user/unfollow/{user_id}/{supplier_id}",[UserController::class,"unfollowSupplier"]);
+Route::get("/user/suppliers/{user_id}",[UserController::class,"mySuppliers"]);
 Route::get("/users",[UserController::class,"getUsers"]);
-
 
 Route::post('/supplier/register', [SupplierController::class, 'create'])->name('supplier.register');
 Route::post('/update/supplierInfo', [SupplierController::class, 'updateInfo'])->name('supplier.info');
-//Route::post('/update/adminPassword', [SupplierController::class, 'supplierPassword'])->name('supplier.supplierPassword');
+Route::post('/update/suppliername', [SupplierController::class, 'updateName'])->name('supplier.name');
+Route::post('/update/supplieremail', [SupplierController::class, 'updateEmail'])->name('supplier.email');
+Route::post('/update/suppliertel', [SupplierController::class, 'updateTel'])->name('supplier.tel');
+//Route::post('/update/userPassword', [UserController::class, 'userPassword'])->name('user.Password');
 Route::post('/update/supplierImage', [SupplierController::class, 'supplierImage'])->name('supplier.image');
+//Route::post('/update/adminPassword', [SupplierController::class, 'supplierPassword'])->name('supplier.supplierPassword');
 Route::post('/supplier/login', [SupplierController::class, 'login'])->name('supplier.login');
-Route::get("/suppliers",[SupplierController::class,"getSuppliers"]);
+Route::get("/suppliers/limit/{id}",[SupplierController::class,"getSuppliers"]);
+Route::get("/suppliers/products/{id}",[SupplierController::class,"getProducts"]);
+
+Route::get('/all/category', [CategoryController::class, 'getAll'])->name('all.category');
+//Product routes
+Route::get("product/all",[ProductController::class,"getAllProducts"])->name("all.product");
+Route::get("product/single/{id}",[ProductController::class,"getSingle"]);
+Route::get("product/category/{id}",[ProductController::class,"getCategoryProducts"]);
+Route::get("product/special_category/{id}",[ProductController::class,"getSpecialCategoryProducts"]);
+Route::post("product/add",[ProductController::class,"store"]);
+Route::post("product/update",[ProductController::class,"update"]);
+Route::get("product/softdelete/{id}",[ProductController::class,"softDelete"]);
+Route::get("product/restore/{id}",[ProductController::class,"restore"]);
+Route::get("product/pdelete/{id}",[ProductController::class,"destroy"]);

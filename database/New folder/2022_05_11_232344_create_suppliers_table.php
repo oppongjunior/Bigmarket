@@ -13,11 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('special_categories', function (Blueprint $table) {
+        Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
-            $table->string("category_name");
-            $table->softDeletes();
+            $table->string("name");
+            $table->string("password");
+            $table->boolean("verified");
+            $table->string("email")->unique();
+            $table->string("logo");
+            $table->string("address");
+            $table->string("banner_image");
+            $table->string("tel");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -28,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('special_categories');
+        Schema::dropIfExists('suppliers');
     }
 };
