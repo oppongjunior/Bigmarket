@@ -69,16 +69,16 @@ class ProductController extends Controller
             $category = 2;
         }
         if ($id == "foods") {
-            $category = 4;
+            $category = 3;
         }
         if ($id == "health") {
-            $category = 5;
+            $category = 4;
         }
         if ($id == "books") {
-            $category = 6;
+            $category = 5;
         }
         if ($id == "furnitures") {
-            $category = 7;
+            $category = 6;
         }
         if ($id == "all") {
             $products =

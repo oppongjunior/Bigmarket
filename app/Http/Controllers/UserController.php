@@ -18,7 +18,7 @@ class UserController extends Controller
             return redirect()->intended("user/dashboard");
         }
         $categories = Category::all();
-        return view("auth.UserRegister",['categories'=>$categories]);
+        return view("auth.UserRegister", ['categories' => $categories]);
     }
     public function create(Request $request)
     {
@@ -37,8 +37,8 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->tel = "";
-        $user->address="";
-        $user->verified=0;
+        $user->address = "";
+        $user->verified = 0;
         $user->profile_picture = "";
         $user->save();
         Auth::login($user);
@@ -52,7 +52,7 @@ class UserController extends Controller
             return redirect()->intended("user/dashboard");
         }
         $categories = Category::all();
-        return view("auth.UserLogin",["categories"=>$categories]);
+        return view("auth.UserLogin", ["categories" => $categories]);
     }
 
     //login user
@@ -63,14 +63,14 @@ class UserController extends Controller
             'password' => ['required'],
         ]);
 
-        
+
 
         if (Auth::attempt($credentials)) {
-            
+
             $request->session()->regenerate();
             return redirect()->intended('user/dashboard');
         }
-        
+
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
@@ -79,20 +79,20 @@ class UserController extends Controller
     public function dashboard()
     {
         $categories = Category::all();
-        return view("auth.UserDashboard",['categories'=>$categories]);
+        return view("auth.UserDashboard", ['categories' => $categories]);
     }
     public function orders()
     {
         $categories = Category::all();
-        return view("frontend.pages.orders",['categories'=>$categories]);
+        return view("frontend.pages.orders", ['categories' => $categories]);
     }
     public function shipping()
     {
         $categories = Category::all();
-        return view("frontend.pages.shipping",['categories'=>$categories]);
+        return view("frontend.pages.shipping", ['categories' => $categories]);
     }
-    
-    
+
+
     public function updateInfo(Request $request)
     {
         //validate user
@@ -101,7 +101,7 @@ class UserController extends Controller
             "name" => "required|min:3|max:255",
             "email" => "required|email|max:255|unique:users,email,$id",
         ]);
-        
+
         //insert into user table
         $user = User::find(Auth::user()->id);
         $user->name = $request->name;
@@ -146,13 +146,13 @@ class UserController extends Controller
         $saved_image = $location . $image_name;
 
 
-        //upload image with image intervention
-        Image::make($image_file)->resize(200, 200)->save($saved_image);
+
         //delete the previous profile image
         if (Auth::user()->profile_picture) {
             unlink(Auth::user()->profile_picture);
         }
-
+        //upload image with image intervention
+        Image::make($image_file)->resize(200, 200)->save($saved_image);
         //update into password table
         $user = User::find(Auth::user()->id);
         $user->profile_picture = $saved_image;

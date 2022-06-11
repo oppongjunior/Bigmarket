@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SupplierController;
@@ -38,6 +39,12 @@ Route::get("/user/follow/{user_id}/{supplier_id}",[UserController::class,"follow
 Route::get("/user/unfollow/{user_id}/{supplier_id}",[UserController::class,"unfollowSupplier"]);
 Route::get("/user/suppliers/{user_id}",[UserController::class,"mySuppliers"]);
 Route::get("/users",[UserController::class,"getUsers"]);
+//cart
+Route::get("/user/{id}/cart",[CartController::class,"getCart"]);
+Route::post("/user/addcart",[CartController::class,"addToCart"]);
+Route::post("/user/removecart",[CartController::class,"removeCart"]);
+Route::post("/user/modifycart",[CartController::class,"modifyCart"]);
+
 
 Route::post('/supplier/register', [SupplierController::class, 'create'])->name('supplier.register');
 Route::post('/update/supplierInfo', [SupplierController::class, 'updateInfo'])->name('supplier.info');
@@ -62,3 +69,4 @@ Route::post("product/update",[ProductController::class,"update"]);
 Route::get("product/softdelete/{id}",[ProductController::class,"softDelete"]);
 Route::get("product/restore/{id}",[ProductController::class,"restore"]);
 Route::get("product/pdelete/{id}",[ProductController::class,"destroy"]);
+

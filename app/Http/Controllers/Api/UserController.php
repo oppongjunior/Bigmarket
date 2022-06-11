@@ -196,7 +196,9 @@ class UserController extends Controller
         //insert into user table
         $user = User::find($id);
         //delete previous image from folder
-        unlink($user->profile_picture);
+        if($user->profile_picture){
+            unlink($user->profile_picture);
+        }
         $user->profile_picture = $saved_image;
         $user->update();
 
